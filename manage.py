@@ -1,11 +1,12 @@
-from  application import app,manage
+from  application import app,manager
 from flask_script import Server
 import sys
+import urls
 
 # 配置 runserver 指令
-manage.add_command('runserver',Server(host='localhost',port="5000",use_debugger=True,use_reloader=True))
+manager.add_command('runserver',Server(host='localhost',port="5000",use_debugger=True,use_reloader=True))
 def main():
-    manage.run()
+    manager.run()
 
 if __name__ == '__main__':
     try:
