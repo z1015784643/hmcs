@@ -9,11 +9,13 @@ var user_login_ops={
             var login_pwd = $('.login_wrap input[name=login_pwd]').val()
             console.log(login_name)
             console.log(login_pwd)
-            if(login_name == undefined ||login_name.length<1){
+            var log_name = /^[a-zA-Z0-9_-]{4,16}$/;
+            if(login_name == undefined ||login_name.length<1 || log_name.test(login_name) == false){
                 alert('请输入正确的名字')
                 return
             }
-            if(login_pwd == undefined ||login_pwd.length<1){
+            var log_pwd = /^[\w_-]{6,10}$/;
+            if(login_pwd == undefined ||login_pwd.length<1 || log_pwd.test(login_pwd) == false){
                 alert('请输入正确的密码')
                 return
             }

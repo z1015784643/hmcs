@@ -1,4 +1,5 @@
 from flask import Blueprint,render_template,request,jsonify
+from common.models.User import User
 
 router_user = Blueprint('user_page',__name__)
 
@@ -24,6 +25,12 @@ def login():
     if login_pwd is None or len(login_name) < 1:
         resp['code'] = 0
         resp['msg'] = '请输入正确的密码'
+        return jsonify(resp)
+    # 从数据库取出user
+    user_info = User.query.filter_by(login_name=login_name).first()
+    if not user_info:
+        resp['code'] = 0
+        resp['msg'] = "用户不存在"
         return jsonify(resp)
 
     return jsonify(resp)
