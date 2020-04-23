@@ -1,5 +1,8 @@
-from flask import Blueprint,render_template,request,jsonify
+from flask import Blueprint,render_template,request,jsonify,make_response
 from common.models.User import User
+from common.user.UserService import UserService
+
+import json
 
 router_user = Blueprint('user_page',__name__)
 
@@ -32,8 +35,22 @@ def login():
         resp['code'] = 0
         resp['msg'] = "用户不存在"
         return jsonify(resp)
+    
+    # 判断密码
+    if user_info.login_pwd != UserService.genertePwd(login_pwd,user_info.login_salt):
+        resp['code'] = 1
+        resp['msg'] = '密码输入错误'
+        return jsonify(resp)
 
-    return jsonify(resp)
+    if user_info.status != 1:
+        resp['code'] = 0
+        resp['msg'] = '用户已被禁用，请联系管理员'
+        return jsonify(resp)
+
+    response = make_response(json.dumps({'code':200,'msg':'登录成功'}))
+    response.set_cookie('hmsc_1901C','%s@%s'%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
+
+    return response
     
 
 @router_user.route('/logout')
