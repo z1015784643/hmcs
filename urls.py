@@ -4,7 +4,7 @@ from web.contorllers.static import route_static
 from web.contorllers.index import route_index
 
 # 拦截路由
-# from web.interceptos.AuthInterceptor import *
+from web.interceptos.AuthInterceptor import *
 
 
 # 蓝图路由

@@ -4,6 +4,7 @@ from common.models.User import User
 from common.user.UserService import UserService
 from application import app
 from common.libs.Helper import ops_render
+from common.libs.UrlManager import UrlManager
 
 import json
 
@@ -12,8 +13,9 @@ router_user = Blueprint('user_page',__name__)
 @router_user.route('/login',methods=['GET','POST'])
 def login():
     if request.method == 'GET':
-        # if g.current_user:
-        #     return redirect(UrlManager.buildUrl("/"))
+        print("前端的用户值：",g.current_user)
+        if g.current_user:
+            return redirect(UrlManager.buildUrl("/"))
         return ops_render("user/login.html")
     
     resp={

@@ -34,11 +34,20 @@ var user_login_ops={
                 success:function(resp){
                     btn_target.removeClass('disabled')
                     alert(resp.msg)
+                    console.log(resp.msg)
+                    console.log(resp.code)
+                    if (resp.code === 200 ){
+                        console.log('刷新页面')
+                        window.location.reload()
+                        
+                    }
                 },
                 error:function (resp) {
                     console.log(error)
                 }
             })
+            // console.log('刷新')
+            // window.location.reload()
 
         })
     }
