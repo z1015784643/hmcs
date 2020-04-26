@@ -49,7 +49,6 @@ def before_request():
 def check_login():
     cookies = request.cookies
     auth_cookie = cookies[app.config['AUTH_COOKIE_NAME']] if app.config['AUTH_COOKIE_NAME'] in cookies else None
-    print('用户cookie：',auth_cookie)
 
 
     if '/api' in request.path:
@@ -61,7 +60,6 @@ def check_login():
         return False
 
     auth_info = auth_cookie.split("@")
-    print('++++++',auth_info)
     if len(auth_info) != 2:
         # print('cookie长度',len(auth_cookie))
         return False

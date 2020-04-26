@@ -18,6 +18,7 @@ def login():
             return redirect(UrlManager.buildUrl("/"))
         return ops_render("user/login.html")
     
+    # post请求
     resp={
         'code':200,
         'msg':'登录成功',
@@ -66,8 +67,8 @@ def logout():
 
 @router_user.route('/edit')
 def edit():
-    return "编辑"
+    return ops_render("user/edit.html")
 @router_user.route('/reset-pwd')
 def resetpwd():
-    return '重置密码'
+    return ops_render("user/resetpwd.html")
 
