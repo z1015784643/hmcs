@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template,request,jsonify,make_response,redirect,g
+from flask import Blueprint,render_template,request,jsonify,make_response,redirect,g,session
 
 from common.models.User import User
 from common.user.UserService import UserService
@@ -56,7 +56,11 @@ def login():
         return jsonify(resp)
 
     response = make_response(json.dumps({'code':200,'msg':'登录成功'}))
-    response.set_cookie(app.config['AUTH_COOKIE_NAME'],'%s@%s'%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
+    # response.set_cookie(app.config['AUTH_COOKIE_NAME'],'%s@%s'%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
+    
+    # 存储session
+    session['username']=user_info.login_name
+    session.permanent = True
 
     return response
     

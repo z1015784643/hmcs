@@ -1,6 +1,7 @@
 from application import app
 from flask import Blueprint,render_template
 from common.models.stat.StatDailySite import StatDailySite
+from common.libs.Helper import ops_render
 
 route_index = Blueprint("index_page",__name__)
 
@@ -29,5 +30,5 @@ def index():
     }
 
     StatDailySite.query.all()
-    return render_template("index/index.html")
+    return ops_render("index/index.html",resp_data)
    

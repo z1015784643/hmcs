@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from application import app
-from flask import request,g,redirect
+from flask import request,g,redirect,session
 
 from common.models.User import ( User )
 from common.user.UserService import ( UserService )
@@ -47,35 +47,41 @@ def before_request():
 判断用户是否已经登录
 '''
 def check_login():
-    cookies = request.cookies
-    auth_cookie = cookies[app.config['AUTH_COOKIE_NAME']] if app.config['AUTH_COOKIE_NAME'] in cookies else None
+    # cookie验证用户是否登录
+
+    # cookies = request.cookies
+    # auth_cookie = cookies[app.config['AUTH_COOKIE_NAME']] if app.config['AUTH_COOKIE_NAME'] in cookies else None
 
 
-    if '/api' in request.path:
-        app.logger.info(request.path)
-        auth_cookie = request.headers.get("Authorization")
-        app.logger.info( request.headers.get("Authorization") )
+    # if '/api' in request.path:
+    #     app.logger.info(request.path)
+    #     auth_cookie = request.headers.get("Authorization")
+    #     app.logger.info( request.headers.get("Authorization") )
 
-    if auth_cookie is None:
-        return False
+    # if auth_cookie is None:
+    #     return False
 
-    auth_info = auth_cookie.split("@")
-    if len(auth_info) != 2:
-        # print('cookie长度',len(auth_cookie))
-        return False
+    # auth_info = auth_cookie.split("@")
+    # if len(auth_info) != 2:
+    #     return False
 
-    try:
-        user_info = User.query.filter_by(uid=auth_info[1]).first()
-    except Exception:
-        return False
+    # try:
+    #     user_info = User.query.filter_by(uid=auth_info[1]).first()
+    # except Exception:
+    #     return False
 
-    if user_info is None:
-        return False
+    # if user_info is None:
+    #     return False
 
-    if auth_info[0] != UserService.generateAuthCode( user_info ):
-        return False
+    # if auth_info[0] != UserService.generateAuthCode( user_info ):
+    #     return False
 
-    if user_info.status != 1:
-        return False
+    # if user_info.status != 1:
+    #     return False
 
+    # return user_info
+
+    # session验证用户是否登录
+    user_info = session.get('username')
+    print('session用户名',user_info)
     return user_info
