@@ -85,7 +85,7 @@ def edit():
     email = req['email'] if 'email' in req else ''
     if nickname is None or len(nickname)<1:
         resp['code'] = 0
-        resp['msg'] = '请输入正确的名字'
+        resp['msg'] = '请输入正确的姓名'
         return jsonify(resp)
     if email is None or len(email)<1:
         resp['code'] = 0

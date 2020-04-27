@@ -17,7 +17,7 @@ var user_edit_ops = {
             console.log(nickname_value)
             console.log(email_value)
             if ( !nickname_value || nickname_value.length < 1){
-                alert('请输入正确的手机号')
+                alert('请输入正确的姓名')
                 return false
             }
             if ( !email_value || email_value.length < 1 ){
