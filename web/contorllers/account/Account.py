@@ -30,7 +30,6 @@ def info():
     if not info:
         return redirect(reback_url)
     resp_data['info'] = info
-    print('用户数据',resp_data)
     return ops_render('account/info.html',resp_data)
 
 @router_account.route('/set',methods=['GET','POST'])
@@ -100,6 +99,7 @@ def set():
     model_user.mobile = mobile
     model_user.email = email
     model_user.login_name = login_name
+    model_user.login_pwd = UserService.genertePwd(login_pwd,model_user.login_salt)
     # if login_pwd != default_pwd
 
     model_user.updated_time = getCurrentDate()
