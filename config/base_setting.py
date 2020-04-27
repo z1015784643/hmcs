@@ -24,8 +24,8 @@ IGNORE_CHECK_LOGIN_URLS =[
 
 # session
 
-AUTH_SESSION_NAME="hmsc_1901"
-# session加密字符
-SECRET_KEY = os.urandom(24)
-# session过期时间
-PERMANENT_SESSION_LIFETIME=timedelta(days=7)
+# AUTH_SESSION_NAME="hmsc_1901"
+# # session加密字符
+# SECRET_KEY = os.urandom(24)
+# # session过期时间
+# PERMANENT_SESSION_LIFETIME=timedelta(days=7)
