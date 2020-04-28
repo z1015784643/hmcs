@@ -22,6 +22,8 @@ IGNORE_CHECK_LOGIN_URLS =[
     '/favicon.ico'
 ]
 
+PAGE_SIZE = 5
+
 # session
 
 # AUTH_SESSION_NAME="hmsc_1901"

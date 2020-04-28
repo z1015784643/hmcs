@@ -6,8 +6,8 @@ $(function () {
             type:'POST',
             data:{'id':id,'acts':acts},
             dataType:'json',
-            success:function (req) {
-                alert(req.msg);
+            success:function (resp) {
+                alert(resp.msg);
                 window.location.reload()
             }
         })

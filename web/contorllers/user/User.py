@@ -95,7 +95,7 @@ def edit():
     user_info = g.current_user
     user_info.nickname = nickname
     user_info.email = email
-    print('要保存的名字',user_info.nickname)
+    # print('要保存的名字',user_info.nickname)
     db.session.add(user_info)
     db.session.commit()
 

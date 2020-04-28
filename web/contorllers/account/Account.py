@@ -1,7 +1,8 @@
 from flask import Blueprint,request,redirect,jsonify
 
-from application import db
-from common.libs.Helper import ops_render,getCurrentDate
+from application import db,app
+from sqlalchemy import or_  #或者
+from common.libs.Helper import ops_render,getCurrentDate,iPagination
 from common.models.User import User
 from common.libs.UrlManager import UrlManager
 from common.user.UserService import UserService
@@ -15,15 +16,31 @@ router_account = Blueprint("account_page",__name__)
 def index():
     resp_data={}
     req = request.values
+    page = int(req['p']) if ( 'p' in req and req['p'] ) else 1
+
     query = User.query
     if 'status' in req and int(req['status']) >-1:
         query = User.query.filter(User.status == int(req['status']))
-    list = query.all()
+    if 'mix_kw' in req:
+        rule = or_(User.nickname.ilike("%{0}%".format(req['mix_kw'])),User.mobile.ilike("%{0}%".format(req['mix_kw'])))
+        query = query.filter(rule)
+    # 分页的三大关键字,当前页，每页显示数，一共多少页
+    params = {
+        'total':query.count(),
+        'page':page,
+        'page_size':app.config['PAGE_SIZE'],
+        'url':request.full_path.replace("&p={}".format(page),"")
+    }
+    pages = iPagination(params)
+    offset = (page-1)*app.config['PAGE_SIZE']
+    limit = app.config['PAGE_SIZE']*page
+    list = query.all()[offset:limit]
     resp_data['list'] = list
     resp_data['status'] = {
         '1':'正常',
         '0':'删除',
     }
+    resp_data['pages'] = pages
     return ops_render('account/index.html',resp_data)
 
 @router_account.route('/info')
@@ -134,20 +151,20 @@ def removeOrRecover():
     acts = req['acts'] if 'acts' in req else ''
 
     if acts not in ['remove','recover']:
-        resp['code'] = 0
-        resp['msg'] = '操作有误'
-        return jsonify(resp)
+        resp_data['code'] = 0
+        resp_data['msg'] = '操作有误'
+        return jsonify(resp_data)
 
     if id:
         user_info = User.query.filter_by(uid=id).first()
         if not user_info:
-            resp['code'] = 0
-            resp['msg'] = '账户不存在'
-            return jsonify(resp)
+            resp_data['code'] = 0
+            resp_data['msg'] = '账户不存在'
+            return jsonify(resp_data)
         if user_info and user_info.uid == 1:
-            resp['code'] = 0
-            resp['msg'] = '该用户不可删除'
-            return jsonify(resp)
+            resp_data['code'] = 0
+            resp_data['msg'] = '该用户不可删除'
+            return jsonify(resp_data)
         if acts == 'remove':
             user_info.status = 0
             user_info.updated_time = getCurrentDate()
