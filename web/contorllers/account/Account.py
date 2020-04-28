@@ -14,8 +14,16 @@ router_account = Blueprint("account_page",__name__)
 @router_account.route('/index')
 def index():
     resp_data={}
-    list = User.query.all()
+    req = request.values
+    query = User.query
+    if 'status' in req and int(req['status']) >-1:
+        query = User.query.filter(User.status == int(req['status']))
+    list = query.all()
     resp_data['list'] = list
+    resp_data['status'] = {
+        '1':'正常',
+        '0':'删除',
+    }
     return ops_render('account/index.html',resp_data)
 
 @router_account.route('/info')
@@ -99,6 +107,10 @@ def set():
     model_user.mobile = mobile
     model_user.email = email
     model_user.login_name = login_name
+    # if user_info.id == User.uid:
+    #     resp['code'] = 0
+    #     resp['msg'] = '该用户不可修改'
+    #     return jsonify(resp)
     model_user.login_pwd = UserService.genertePwd(login_pwd,model_user.login_salt)
     # if login_pwd != default_pwd
 
@@ -107,3 +119,43 @@ def set():
     db.session.commit()
 
     return jsonify(resp)
+
+
+
+@router_account.route('removeOrRecover',methods=['GET','POST'])
+def removeOrRecover():
+    resp_data={
+        'code':1,
+        'msg':'操作成功',
+        'data':{}
+    }
+    req = request.values
+    id = req['id'] if 'id' in req else 0
+    acts = req['acts'] if 'acts' in req else ''
+
+    if acts not in ['remove','recover']:
+        resp['code'] = 0
+        resp['msg'] = '操作有误'
+        return jsonify(resp)
+
+    if id:
+        user_info = User.query.filter_by(uid=id).first()
+        if not user_info:
+            resp['code'] = 0
+            resp['msg'] = '账户不存在'
+            return jsonify(resp)
+        if user_info and user_info.uid == 1:
+            resp['code'] = 0
+            resp['msg'] = '该用户不可删除'
+            return jsonify(resp)
+        if acts == 'remove':
+            user_info.status = 0
+            user_info.updated_time = getCurrentDate()
+            db.session.commit()
+        elif acts == 'recover':
+            user_info.status = 1
+            user_info.updated_time = getCurrentDate()
+            db.session.commit()
+        
+        
+    return jsonify(resp_data)
