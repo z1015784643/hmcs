@@ -47,5 +47,33 @@ def iPagination(params):
     return ret
 
 
+# 根据数据库中的某个字段（id），来查询出一个dict的结果
+
+def getDictFilterField(db_model,select_filed,key_filed,id_list):
+    ret = {}
+    query = db_model.query
+    if id_list and len(id_list)>0:
+        query = query.filter(select_filed.in_(id_list))
+    list = query.all()
+    if not list:
+        return ret
+    for item in list:
+        if not hasattr(item,key_filed):
+            break
+        ret[getattr(item,key_filed)] = item
+    return ret
+
+def selectFilterObj(obj,field):
+    ret = []
+    for item in obj:
+        if not hasattr(item,filed):
+            break
+        if getattr(item,field) in ret:
+            continue
+        ret.append(getattr(item,field))
+    return ret
+
+
+
 
 
